@@ -7,8 +7,8 @@ def main_calc(op):
     x = float(memory[0])
     y = float(memory[2]) if len(memory) > 2 else 0
     operations = {'+': x + y, '-': x - y, 'x': x * y, '÷': "!Dividing by 0!" if y == 0 else x / y,
-           '√': "!√ of negative!" if x < 0 else round(x ** 0.5, 5), "x²": round(x ** 2, 5), "1/x": "!Dividing by 0!" if x == 0 else round(1 / x, 5),
-           '±': -x if x != 0 else 0}
+           '√': "!√ of negative!" if x < 0 else round(x ** 0.5, 5), "x²": round(x ** 2, 5), 
+           "1/x": "!Dividing by 0!" if x == 0 else round(1 / x, 5), '±': -x if x != 0 else 0}
     entry.insert(END, operations.get(op, 0))
     if op in "+-x÷": memory[0] = operations[op]
 
@@ -37,7 +37,7 @@ def char_reading(char):
         memory.append(entry.get())
         main_calc(memory[1])
     if char == '%' and len(entry.get()) != 0 and len(memory) != 0:
-        memory.append( (float(memory[0]) / 100) * float(entry.get()))
+        memory.append((float(memory[0]) / 100) * float(entry.get()))
         main_calc(memory[1])
     if char in ['√', "x²", "1/x"]:
         memory = [entry.get(), char]
@@ -53,6 +53,13 @@ def key_pressed(event):
     if char in buttons_list:
         char_reading(char)
 
+def show_about():
+    about_window = Toplevel(window)
+    about_window.title("О программе")
+    about_window.geometry("310x150")
+    about_label = Label(about_window, text="(c) A.A.Kireev, 2025\nAll rights are reserved\n\nПользуясь случаем, хочу выразить\nпубличную благодарность своим родителям:\nГильмие Арслановне и Азату Салаватовичу.\nCпасибо им за всё!", justify=CENTER)
+    about_label.pack(expand=True)
+
 buttons_list = ['%', '√', "x²", "1/x",
                 "CE", 'C', '←', '÷',
                 '7', '8', '9', 'x',
@@ -63,8 +70,7 @@ buttons_list = ['%', '√', "x²", "1/x",
 # Creating the window
 window = Tk()
 window.title("Calculator")
-window_size = "348x445" # "348x395"
-window.geometry(window_size)
+window.geometry("348x450")
 window.resizable(False, False)
 
 # Creating an entry
@@ -80,14 +86,9 @@ for i in range(6):
         btn.place(x=87*j, y=65 + 55*i, width=87, height=55)
         list_counter += 1
 
+# Creating info button
+about_btn = Button(text="О программе", font=('Arial', 14), command=show_about)
+about_btn.place(x=87, y=400, width=174, height=40)
+
 window.bind("<Key>", key_pressed)
-author_info = Label(text="Гильмия Арслановна и Азат Азатович, спасибо за всё!!!\nCopyright (c) 2025 A.A.Kireev\nAll rights are reserved")
-author_info.place(x=174-155, y=445-50)
-
 window.mainloop()
-
-# + первый ноль и запятая
-# + ошибку деления на ноль
-# + пустота в ноль
-# + ввод с клавиатуры 
-# + информация”
