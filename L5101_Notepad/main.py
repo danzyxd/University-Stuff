@@ -2,6 +2,7 @@ import tkinter as tk
 import sys
 from tkinter import messagebox
 
+
 class Notepad(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -10,17 +11,17 @@ class Notepad(tk.Tk):
         self.minsize(300, 200)
 
         self._build_menu()
-        
-        self.grid_columnconfigure(0, weight = 1)
-        self.grid_rowconfigure(0, weight = 1)
 
-        self.editor = tk.Text(wrap = "none")
-        self.editor.grid(column = 0, row = 0, sticky = tk.NSEW)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
 
-        self.scrollbar_y = tk.Scrollbar(orient = "vertical", command = self.editor.yview)
-        self.scrollbar_y.grid(column = 1, row = 0, sticky = tk.NS)
-        self.scrollbar_x = tk.Scrollbar(orient = "horizontal", command = self.editor.xview)
-        self.scrollbar_x.grid(column = 0, row = 1, sticky = tk.EW)
+        self.editor = tk.Text(wrap="none")
+        self.editor.grid(column=0, row=0, sticky=tk.NSEW)
+
+        self.scrollbar_y = tk.Scrollbar(orient="vertical", command=self.editor.yview)
+        self.scrollbar_y.grid(column=1, row=0, sticky=tk.NS)
+        self.scrollbar_x = tk.Scrollbar(orient="horizontal", command=self.editor.xview)
+        self.scrollbar_x.grid(column=0, row=1, sticky=tk.EW)
         self.editor["yscrollcommand"] = self.scrollbar_y.set
         self.editor["xscrollcommand"] = self.scrollbar_x.set
 
@@ -34,7 +35,7 @@ class Notepad(tk.Tk):
         main_menu = tk.Menu()
         for elem in main_menu_list:
             elem[1] = tk.Menu(tearoff=0)
-            for i, (key, value) in enumerate(elem[2].items()): # enumerate
+            for i, (key, value) in enumerate(elem[2].items()):  # enumerate
                 if i == len(elem[2]) - 1:
                     elem[1].add_separator()
                 elem[1].add_command(label=key, command=value)
@@ -44,33 +45,38 @@ class Notepad(tk.Tk):
 
     def btn_new():
         pass
+
     def btn_open():
         pass
+
     def btn_save():
         pass
+
     def btn_save_as():
         pass
 
     def btn_exit(self):
         sys.exit(0)
-    
-    def btn_copy():
+
+    def btn_copy(self):
         pass
-    def btn_paste():
+
+    def btn_paste(self):
         pass
+
     def btn_settings():
         pass
 
     def btn_info(self):
         def close_window():
             window.destroy()
-        
+
         window = tk.Toplevel()
         window.title("Справка")
         window.geometry("300x150")
         label = tk.Label(window, text="Приложение с графический интерфейсом\n'Блокнот TCD' (файл приложения: TCD).\nПозволяет: создавать / открывать / сохранять\nзашифрованный текстовый файл, предусмотрены\nввод и сохранение личного ключа,\nвывод не модальной формы 'Справка',\nвывод модальной формы 'О программе'.")
         label.pack(fill="both", expand=True)
-        
+
         button = tk.Button(window, text="Закрыть", command=close_window)
         button.pack(pady=10)
 
@@ -79,13 +85,6 @@ class Notepad(tk.Tk):
 
     file_menu, edit_menu, info_menu = None, None, None
 
-# class Menu(tk.Menu):
-#     def __init__(self):
-#         super().__init__()
-#         self.tearoff=0
-    
-# class Btn():
-#     pass
 
 window = Notepad()
 window.mainloop()
