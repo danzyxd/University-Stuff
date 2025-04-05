@@ -59,10 +59,25 @@ class Notepad(tk.Tk):
         sys.exit(0)
 
     def btn_copy(self):
-        pass
+        try:
+            selected_text = self.editor.get(tk.SEL_FIRST, tk.SEL_LAST)
+            self.clipboard_append(selected_text)
+        except tk.TclError:
+            pass
 
     def btn_paste(self):
-        pass
+        try:
+            clipboard_text = self.clipboard_get()
+            try:
+                selected_text = self.editor.get(tk.SEL_FIRST, tk.SEL_LAST)
+                if selected_text != '':
+                    self.editor.replace(tk.SEL_FIRST, tk.SEL_LAST, clipboard_text)
+                else:
+                    self.editor.insert(tk.INSERT, clipboard_text)
+            except tk.TclError:
+                self.editor.insert(tk.INSERT, clipboard_text)
+        except tk.TclError:
+            pass
 
     def btn_settings():
         pass
