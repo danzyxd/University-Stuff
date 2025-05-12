@@ -1,6 +1,7 @@
 import tkinter as tk
 import sys
 from tkinter import messagebox, font, filedialog
+import cryptography
 
 
 class Notepad(tk.Tk):
@@ -10,7 +11,7 @@ class Notepad(tk.Tk):
         self.geometry("800x500")
         self.minsize(300, 200)
 
-        self.iconbitmap(default="./edit.ico")
+        # self.iconbitmap(default="./edit.ico")
 
         self._build_menu()
 
@@ -29,8 +30,17 @@ class Notepad(tk.Tk):
         self.editor["xscrollcommand"] = self.scrollbar_x.set
 
         self.editor.bind("<<Modified>>", self.text_change)
-        
+
         self.editor.focus_set()
+
+        try:
+            with open("./AmTCD.ini", "r", encoding="utf-8") as file:
+                pass
+        except FileNotFoundError:
+            with open("./AmTCD.ini", "w", encoding="utf-8") as self.file:
+                keyuser = cryptography.generate_new_key()
+                self.file.write(f"[main]\nkeyuser = {keyuser}")
+
 
 
     def _build_menu(self):
@@ -85,32 +95,36 @@ class Notepad(tk.Tk):
             return
         self.file_path = self.tmp_file_path
         with open(self.file_path, "r", encoding="utf-8") as file:
-            content = file.read()
+            text = file.read()
+        try:
+            decrypted_text = cryptography.decrypt(text)
             self.editor.delete("1.0", "end")
-            self.editor.insert("1.0", content)
+            self.editor.insert("1.0", decrypted_text)
             self.is_edited = False
             self.editor.edit_modified(False)
             self.window_title()
+        except ValueError:
+            messagebox.showerror("Ошибка", "Файл поврежден или имеет неверный формат!")
 
     def btn_save(self):
         global file_path
         if self.file_path is None:
             self.btn_save_as()
         else:
-            self.text = self.editor.get("1.0", "end").strip()
-            with open(self.file_path, "w", encoding="utf-8") as self.file:
-                self.file.write(self.text)
-            self.is_edited = False
-            self.window_title()
+            self.save_new_file()
 
     def btn_save_as(self):
         global file_path
         self.file_path = filedialog.asksaveasfilename(defaultextension=".txtx", filetypes=[("Text files", "*.txtx"), ("All files", "*.*")])
         if not self.file_path:
             return
+        self.save_new_file()
+
+    def save_new_file(self):
         self.text = self.editor.get("1.0", "end").strip()
+        encrypted_text = cryptography.encrypt(self.text)
         with open(self.file_path, "w", encoding="utf-8") as self.file:
-            self.file.write(self.text)
+            self.file.write(encrypted_text)
         self.is_edited = False
         self.window_title()
 
