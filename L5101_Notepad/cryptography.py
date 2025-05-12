@@ -1,5 +1,4 @@
 from random import randint
-import configparser
 
 def is_prime(num):
     for i in range(2, round((num)**0.5) + 1):
@@ -18,9 +17,10 @@ def generate_new_key():
             return new_key
 
 def load_key():
-    config = configparser.ConfigParser()
-    config.read("AmTCD.ini")
-    key = int(config.get("main", "keyuser"), 16)
+    with open("./AmTCD.ini", "r", encoding="utf-8") as file:
+        text = file.read()
+        lines = text.split("\n")
+        key = int(lines[1][10:])
     return key
 
 def encrypt(text):
@@ -28,14 +28,16 @@ def encrypt(text):
     new_key = generate_new_key()
     combined_key = key * new_key
     encrypted_text = my_xor(text, new_key)
-    return f"{combined_key}\n{encrypted_text}"
+    return f"[main]\nkeyopen = {combined_key}\nmess = {encrypted_text}"
 
 def decrypt(text):
     key = load_key()
-    lines = text.split("\n", 1)
-    if len(lines) < 2:
+    lines = text.split("\n")
+    if len(lines) < 3:
         raise ValueError("Неверный формат файла!")
-    combined_key = int(lines[0])
-    encrypted_text = lines[1]
+    combined_key = int(lines[1][10:])
+    encrypted_text = lines[2][7:]
+    for additional_lines in range(4, len(lines)):
+        encrypted_text = lines[additional_lines]
     new_key = combined_key // key
     return my_xor(encrypted_text, new_key)
