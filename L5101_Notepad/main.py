@@ -33,6 +33,10 @@ class Notepad(tk.Tk):
 
         self.editor.focus_set()
 
+        self.editor.bind("<Control-n>", self.btn_new)
+        self.editor.bind("<Control-o>", self.btn_open)
+        self.editor.bind("<Control-s>", self.btn_save)
+
         try:
             with open("./AmTCD.ini", "r", encoding="utf-8") as file:
                 pass
@@ -77,7 +81,7 @@ class Notepad(tk.Tk):
             title = f"*{title}"
         self.title(f"{title} - Notepad")
 
-    def btn_new(self):
+    def btn_new(self, event=None):
         global file_path, is_edited
         if self.is_edited:
             self.btn_save()
@@ -86,7 +90,7 @@ class Notepad(tk.Tk):
         self.is_edited = False
         self.window_title()
 
-    def btn_open(self):
+    def btn_open(self, event=None):
         global file_path, is_edited
         if self.is_edited:
             self.btn_save()
@@ -106,7 +110,7 @@ class Notepad(tk.Tk):
         except ValueError:
             messagebox.showerror("Ошибка", "Файл поврежден или имеет неверный формат!")
 
-    def btn_save(self):
+    def btn_save(self, event=None):
         global file_path
         if self.file_path is None:
             self.btn_save_as()
